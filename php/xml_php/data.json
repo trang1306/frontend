@@ -1,0 +1,22 @@
+{
+    "users":[
+        {
+            "NAME": "Zane",
+            "AGE": 54,
+            "CITY": "Ha Noi",
+            "PINCODE": "123456"
+        },
+        {
+            "NAME": "Zane",
+            "AGE": 54,
+            "CITY": "Da Nang",
+            "PINCODE": "123456"
+        },
+        {
+            "NAME": "Zane",
+            "AGE": 54,
+            "CITY": "Ho Chi Minh City",
+            "PINCODE": "123456"
+        }
+    ]
+}

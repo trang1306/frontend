@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fetch API Sandbox</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <style>
+        #more {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Demo Ajax</h2>
+        <div class="text-center">
+            <button id="getText" class="btn btn-primary mr-4">Get Text</button>
+            <button id="getUser" class="btn btn-info mr-4">Get JSON</button>
+            <button id="getPosts" class="btn btn-success mr-4">Get API Data</button>
+        </div>
+        <hr/>
+        <div id="output"></div>
+        <form id="addPost">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="title" class="form-control" placeholder="Enter title . . .">
+            </div>
+            <div class="form-group">
+                <label>Body</label>
+                <textarea class="form-control" placeholder="Enter body . . . " id="body"></textarea>
+            </div>
+            <hr />
+            <input class="btn btn-warning" type="submit" value="Submit">
+        </form>
+        <div id="output"></div>
+        <hr />
+        <h2>Read More</h2>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
+            <span id="dots"> . . . </span>
+            <span id="more">erisque enim ligula venenatis dolor. Maecenas nisl est, ultrices nec congue eget, auctor vitae massa. 
+                Fusce luctus vestibulum augue ut aliquet. Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. 
+                In at libero sed nunc venenatis imperdiet sed ornare turpis. Donec vitae dui eget tellus gravida venenatis. 
+                Integer fringilla congue eros non fermentum. Sed dapibus pulvinar nibh tempor porta.</span><br />
+            <a href="#" onclick="readMore()" id="myBtn"><i>Read more . . . </i></a>
+        </p>
+
+        <!-- <div id="section">
+            <div class="article">
+                <p>Bacon ipsum dolor amet sirloin jowl turducken pork loin pig pork belly, chuck cupim tongue beef doner tri-tip pancetta spare ribs porchetta. 
+                </p>
+                <p class="moretext">
+                Brisket ball tip cow sirloin. Chuck porchetta kielbasa pork chop doner sirloin, bacon beef brisket ball tip short ribs. 
+                </p>
+            </div>
+            <a id="moreless" href="#">Read more</a>
+        </div> -->
+
+    </div>
+    <script>
+        document.getElementById('getText').addEventListener('click', getText);
+        document.getElementById('getUser').addEventListener('click', getUser);
+        document.getElementById('getPosts').addEventListener('click', getPosts);
+        document.getElementById('addPost').addEventListener('click', addPost);
+        //document.getElementById('moreless').addEventListener('click' ,moreless);
+
+        // $('.moreless-button').click(function() {
+        //     $('.moretext').slideToggle();
+        //     if ($('.moreless-button').text() == "Read more") {
+        //         $(this).text("Read less")
+        //     } else {
+        //         $(this).text("Read more")
+        //     }
+        // });
+
+        function getText() {
+            //Cach 1
+            // fetch('sample.txt').then(function(res){
+            //     return res.text();
+            // })
+            // .then(function(data){
+            //     console.log(data);
+            // });
+
+            //Cach 2
+            fetch('sample.txt').then((res) => res.text())
+            .then((data) => {
+                document.getElementById('output').innerHTML = data;
+            })
+            .catch((err) => console.log(err))
+        }
+
+        function getUser() {
+            fetch('users.json').then((res) => res.json())
+            .then((data) => {
+                let output = '<h2>User</h2>';
+                data.forEach(function(user){
+                    output += `
+                        <ul class='list-group'>
+                            <li>ID: ${user.id}</li>
+                            <li>Name: ${user.name}</li>
+                            <li>Email: ${user.email}</li>
+                        </ul>
+                    `;
+                });
+                document.getElementById('output').innerHTML = output;
+            })
+        }
+
+        function getPosts() {
+            fetch('http://jsonplaceholder.typicode.com/posts')
+            .then((res) => res.json())
+            .then((data) => {
+                let output = '<h2>Posts</h2>';
+                data.forEach(function(post){
+                    output += `
+                        <div>
+                            <h3>${post.title}</h3>
+                            <p>${post.body}<p>
+                        </div>
+                    `;
+                });
+                document.getElementById('output').innerHTML = output;
+            })
+        }
+
+        function addPost(e) {
+            e.preventDefault();
+            let title = document.getElementById('title').value;
+            let body = document.getElementById('body').value;
+
+            fetch('http://jsonplaceholder.typicode.com/posts', {
+                method:'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type':'application/json'
+                },
+                body:JSON.stringify({title: title, body: body})
+            })
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+        }
+
+        function readMore() {
+            var dots = document.getElementById("dots"); 
+            var moreText = document.getElementById("more");
+            var btnText = document.getElementById("myBtn");
+            if(dots.style.display === "none") {
+                dots.style.display = "inline";
+                btnText.innerHTML = "<i>Read more . . . </i>";
+                moreText.style.display = "none";
+            } else {
+                dots.style.display = "none";
+                btnText.innerHTML = "<i>Read less</i>";
+                moreText.style.display = "inline";
+            }
+        }
+    </script>
+</body>
+</html>
